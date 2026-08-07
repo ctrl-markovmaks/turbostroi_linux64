@@ -19,11 +19,9 @@ jobs:
         GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common \
         make -C projects/linux/gmake CXXFLAGS="-I$(pwd)/external/garrysmod_common/sourcesdk/public -I$(pwd)/external/garrysmod_common/include -Wno-deprecated-copy -Wno-error"
     - run: |
-        MAKEFILE=$(find . -name "Makefile" -not -path "*/external/*" | head -n 1)
-        MAKEDIR=$(dirname "$MAKEFILE")
-        INC_FLAGS=$(find $(pwd)/external -name "Color.h" -exec dirname {} \; | sort -u | sed 's/^/-I/')
-        echo "Include flags: $INC_FLAGS"
-        GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common make -C "$MAKEDIR" CXXFLAGS="-Wno-deprecated-copy -Wno-error $INC_FLAGS"
+        MAKEDIR=$(dirname $(find . -name "Makefile" -not -path "*/external/*" | head -n 1))
+        INCS=$(find $(pwd)/external/garrysmod_common -type d \( -name "public" -o -name "include" \) | sed 's/^/-I/')
+        GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common make -C "$MAKEDIR" CXXFLAGS="-Wno-deprecated-copy -Wno-error $INCS"
     - uses: actions/upload-artifact@v4
       with:
         name: turbostroi-linux
