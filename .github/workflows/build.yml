@@ -26,5 +26,5 @@ jobs:
       - name: Build Project
         run: |
           PROJECT_GENERATOR_VERSION=2 ./premake5 gmake --gmcommon=external/garrysmod_common --arch=x86_64
-          grep -m 20 "config =" projects/linux/gmake/gmsv_turbostroi.make || true
+          grep "ifeq (" projects/linux/gmake/gmsv_turbostroi.make || true
           make -C projects/linux/gmake config=release64
