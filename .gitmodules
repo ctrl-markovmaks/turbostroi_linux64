@@ -8,4 +8,7 @@
 	branch = development
 [submodule "external/metamod-source"]
 	path = external/metamod-source
-	url = https://github.com/alliedmodders/metamod-source
+	url = https://github.com/alliedmodders/metamod-source.git
+[submodule "external/garrysmod_common"]
+	path = external/garrysmod_common
+	url = https://github.com/danielga/garrysmod_common.git
