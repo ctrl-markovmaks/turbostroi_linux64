@@ -22,6 +22,9 @@ jobs:
           wget -q https://github.com/premake/premake-core/releases/download/v5.0.0-beta8/premake-5.0.0-beta8-linux.tar.gz
           tar -xzf premake-5.0.0-beta8-linux.tar.gz
           chmod +x premake5
+
+      - name: Install Dependencies
+        run: sudo apt-get update && sudo apt-get install -y g++-multilib libboost-dev
           
       - name: Install Multilib
         run: sudo apt-get update && sudo apt-get install -y g++-multilib
