@@ -26,4 +26,4 @@ jobs:
       - name: Build Project
         run: |
           ./premake5 gmake --gmcommon=external/garrysmod_common
-          make -C build config=release_x64
+          make -C projects/linux/gmake config=release_x64
