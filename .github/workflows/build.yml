@@ -22,9 +22,11 @@ jobs:
           wget -q https://github.com/premake/premake-core/releases/download/v5.0.0-beta8/premake-5.0.0-beta8-linux.tar.gz
           tar -xzf premake-5.0.0-beta8-linux.tar.gz
           chmod +x premake5
+          
+      - name: Install Multilib
+        run: sudo apt-get update && sudo apt-get install -y g++-multilib
 
       - name: Build Project
         run: |
           PROJECT_GENERATOR_VERSION=2 ./premake5 gmake --gmcommon=external/garrysmod_common --arch=x86_64
-          grep 'ifeq ($(config),' projects/linux/gmake/gmsv_turbostroi.make || true
           make -C projects/linux/gmake config=release_x86
