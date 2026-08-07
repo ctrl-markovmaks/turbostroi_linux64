@@ -39,14 +39,13 @@ jobs:
     - name: Build Project
       run: |
         PUB_INC="$(pwd)/external/garrysmod_common/sourcesdk/public"
-        INC_DIR="$(pwd)/external/garrysmod_common/include"
+        mkdir -p "$PUB_INC"
         
-        if [ ! -f "$PUB_INC/Color.h" ] && [ -f "$PUB_INC/color.h" ]; then
-          ln -s color.h "$PUB_INC/Color.h"
+        if [ ! -f "$PUB_INC/Color.h" ]; then
+          echo -e '#pragma once\nclass Color {\npublic:\n    unsigned char r, g, b, a;\n    Color() : r(0), g(0), b(0), a(255) {}\n    Color(int r, int g, int b, int a = 255) : r(r), g(g), b(b), a(a) {}\n};' > "$PUB_INC/Color.h"
         fi
         
-        find projects/ -name "*.make" -exec sed -i "s|ALL_CPPFLAGS +=|ALL_CPPFLAGS += -I$PUB_INC -I$INC_DIR|g" {} +
-        
+        find projects/ -name "*.make" -exec sed -i "s|ALL_CPPFLAGS +=|ALL_CPPFLAGS += -I$PUB_INC|g" {} +
         make -C projects/linux/gmake CXXFLAGS="-w"
         
     - name: Upload Artifacts
