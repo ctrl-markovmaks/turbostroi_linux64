@@ -38,7 +38,7 @@ jobs:
 
     - name: Build Project
       run: |
-        export CPLUS_INCLUDE_PATH="$(pwd)/external/garrysmod_common/sourcesdk/public:$(pwd)/external/garrysmod_common/include:$(pwd)/external/garrysmod_common/sourcesdk/public/tier0"
+        find projects/ -name "*.make" -exec sed -i '1i INCLUDES += -I'$(pwd)'/external/garrysmod_common/sourcesdk/public -I'$(pwd)'/external/garrysmod_common/include' {} +
         make -C projects/linux/gmake CXXFLAGS="-w"
 
     - name: Upload Artifacts
