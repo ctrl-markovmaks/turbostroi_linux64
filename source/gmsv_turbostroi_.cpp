@@ -6,7 +6,6 @@
 #include <pthread.h>
 #include <sched.h>
 #endif
-#include "gmsv_turbostroi_win32.h"
 
 #include "lua.hpp"
 
