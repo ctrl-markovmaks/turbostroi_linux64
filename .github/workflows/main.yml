@@ -19,7 +19,7 @@ jobs:
         MAKEFILE=$(find . -name "Makefile" -not -path "*/external/*" | head -n 1)
         MAKEDIR=$(dirname "$MAKEFILE")
         echo "Found Makefile in: $MAKEDIR"
-        GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common make -C "$MAKEDIR"
+        GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common make -C "$MAKEDIR" CXXFLAGS="-Wno-deprecated-copy -Wno-error"
     - uses: actions/upload-artifact@v4
       with:
         name: turbostroi-linux
