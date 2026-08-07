@@ -9,7 +9,9 @@ jobs:
         submodules: 'recursive'
     - run: sudo apt update && sudo apt install -y build-essential gcc-multilib g++-multilib libboost-all-dev wget
     - run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta2/premake-5.0.0-beta2-linux.tar.gz && tar -xzf premake-5.0.0-beta2-linux.tar.gz && sudo mv premake5 /usr/local/bin/
+    - run: git submodule update --init --recursive || true
     - run: git clone --recursive https://github.com/danielga/garrysmod_common.git external/garrysmod_common
+    - run: test -d external/metamod-source/core || git clone --recursive https://github.com/alliedmodders/metamod-source.git external/metamod-source
     - run: |
         sed -i '1s/^/multiprocessorcompile = multiprocessorcompile or function() end\nlinktimeoptimization = linktimeoptimization or function() end\nenablepch = enablepch or function() end\nnopch = nopch or function() end\n/' external/garrysmod_common/premake/generator.lua
     - run: GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common premake5 gmake
