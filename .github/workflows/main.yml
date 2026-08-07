@@ -1,30 +1,50 @@
-name: Build
+name: Build x64
 on: [push, workflow_dispatch]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v4
       with:
         submodules: 'recursive'
 
-    - run: sudo apt update && sudo apt install -y build-essential gcc-multilib g++-multilib libboost-all-dev wget
+    - name: Install Dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y build-essential gcc-multilib g++-multilib libboost-all-dev wget
 
-    - run: |
+    - name: Install Premake5
+      run: |
         wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta2/premake-5.0.0-beta2-linux.tar.gz
         tar -xzf premake-5.0.0-beta2-linux.tar.gz
         sudo mv premake5 /usr/local/bin/
 
-    - name: Patch & Run Premake
+    - name: Prepare Submodules & Dependencies
+      run: |
+        git submodule update --init --recursive || true
+        test -d external/garrysmod_common || git clone --recursive https://github.com/danielga/garrysmod_common.git external/garrysmod_common
+        cd external/garrysmod_common && git submodule update --init --recursive
+        cd ../..
+        test -d external/metamod-source/core || git clone --recursive https://github.com/alliedmodders/metamod-source.git external/metamod-source
+
+    - name: Patch Premake Generator
       run: |
         sed -i '1s/^/multiprocessorcompile = multiprocessorcompile or function() end\nlinktimeoptimization = linktimeoptimization or function() end\nenablepch = enablepch or function() end\nnopch = nopch or function() end\n/' external/garrysmod_common/premake/generator.lua
-        GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common premake5 gmake
+
+    - name: Run Premake5
+      run: GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common premake5 gmake
 
     - name: Build Project
-      run: GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common make -C projects/linux/gmake
+      run: |
+        GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common \
+        make CXXFLAGS="-Wno-deprecated-copy -Wno-error -I$(pwd)/external/garrysmod_common/include -I$(pwd)/external/garrysmod_common/sourcesdk/public -I$(pwd)/external/garrysmod_common/sourcesdk/public/tier0 -I$(pwd)/external/garrysmod_common/sourcesdk/public/tier1"
 
-    - uses: actions/upload-artifact@v4
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
       with:
         name: turbostroi-linux
-        path: bin/
+        path: |
+          bin/
+          *.so
