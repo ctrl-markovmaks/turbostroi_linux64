@@ -38,16 +38,17 @@ jobs:
 
     - name: Build Project
       run: |
-        COLOR_H_DIR=$(dirname $(find external/garrysmod_common -name "Color.h" | head -n 1))
-        PUB_INC=$(dirname "$COLOR_H_DIR")
-        INC_DIR="$(dirname "$PUB_INC")/include"
+        PUB_INC="$(pwd)/external/garrysmod_common/sourcesdk/public"
+        INC_DIR="$(pwd)/external/garrysmod_common/include"
         
-        echo "Injecting includes: -I$PUB_INC -I$INC_DIR"
+        if [ ! -f "$PUB_INC/Color.h" ] && [ -f "$PUB_INC/color.h" ]; then
+          ln -s color.h "$PUB_INC/Color.h"
+        fi
         
         find projects/ -name "*.make" -exec sed -i "s|ALL_CPPFLAGS +=|ALL_CPPFLAGS += -I$PUB_INC -I$INC_DIR|g" {} +
         
         make -C projects/linux/gmake CXXFLAGS="-w"
-
+        
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
