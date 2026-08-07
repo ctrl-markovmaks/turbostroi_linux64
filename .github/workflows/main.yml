@@ -38,7 +38,14 @@ jobs:
 
     - name: Build Project
       run: |
-        find projects/ -name "*.make" -exec sed -i '1i INCLUDES += -I'$(pwd)'/external/garrysmod_common/sourcesdk/public -I'$(pwd)'/external/garrysmod_common/include' {} +
+        COLOR_H_DIR=$(dirname $(find external/garrysmod_common -name "Color.h" | head -n 1))
+        PUB_INC=$(dirname "$COLOR_H_DIR")
+        INC_DIR="$(dirname "$PUB_INC")/include"
+        
+        echo "Injecting includes: -I$PUB_INC -I$INC_DIR"
+        
+        find projects/ -name "*.make" -exec sed -i "s|ALL_CPPFLAGS +=|ALL_CPPFLAGS += -I$PUB_INC -I$INC_DIR|g" {} +
+        
         make -C projects/linux/gmake CXXFLAGS="-w"
 
     - name: Upload Artifacts
