@@ -8,8 +8,12 @@ jobs:
     - run: sudo apt update && sudo apt install -y build-essential libboost-all-dev wget
     - run: wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta2/premake-5.0.0-beta2-linux.tar.gz && tar -xzf premake-5.0.0-beta2-linux.tar.gz && sudo mv premake5 /usr/local/bin/
     - run: git clone --recursive https://github.com/danielga/garrysmod_common.git external/garrysmod_common
-    - run: GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common premake5 gmake && GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common make -C build
+    - run: sed -i '1s/^/multiprocessorcompile = multiprocessorcompile or function() end\n/' external/garrysmod_common/premake/generator.lua
+    - run: GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common premake5 gmake
+    - run: GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common make -C build || GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common make
     - uses: actions/upload-artifact@v4
       with:
         name: turbostroi-linux64
-        path: bin/
+        path: |
+          bin/
+          *.so
