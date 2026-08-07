@@ -22,9 +22,8 @@ jobs:
           wget -q https://github.com/premake/premake-core/releases/download/v5.0.0-beta8/premake-5.0.0-beta8-linux.tar.gz
           tar -xzf premake-5.0.0-beta8-linux.tar.gz
           chmod +x premake5
-          sudo cp premake5 /usr/local/bin/
 
       - name: Build Project
         run: |
-          premake5 gmake --gmcommon=external/garrysmod_common
+          ./premake5 gmake --gmcommon=external/garrysmod_common
           make -C build config=release_x64
