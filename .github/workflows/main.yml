@@ -11,7 +11,11 @@ jobs:
     - run: |
         sed -i '1s/^/multiprocessorcompile = multiprocessorcompile or function() end\nlinktimeoptimization = linktimeoptimization or function() end\nenablepch = enablepch or function() end\nnopch = nopch or function() end\n/' external/garrysmod_common/premake/generator.lua
     - run: GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common premake5 gmake
-    - run: GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common make -C build || GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common make
+    - run: |
+        MAKEFILE=$(find . -name "Makefile" -not -path "*/external/*" | head -n 1)
+        MAKEDIR=$(dirname "$MAKEFILE")
+        echo "Found Makefile in: $MAKEDIR"
+        GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common make -C "$MAKEDIR"
     - uses: actions/upload-artifact@v4
       with:
         name: turbostroi-linux64
