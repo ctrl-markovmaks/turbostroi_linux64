@@ -1,4 +1,12 @@
-﻿#include "gmsv_turbostroi_win32.h"
+#ifdef _WIN32
+#define DLL_EXPORT DLL_EXPORT
+#else
+#define DLL_EXPORT __attribute__((visibility("default")))
+#ifndef _WIN32
+#include <pthread.h>
+#include <sched.h>
+#endif
+#include "gmsv_turbostroi_win32.h"
 
 #include "lua.hpp"
 
@@ -183,7 +191,7 @@ int thread_sendmessage_rpc(lua_State* state) {
 	return 0;
 }
 
-extern "C" __declspec(dllexport) bool ThreadSendMessage(void* p, int message, const char* system_name, const char* name, double index, double value) {
+extern "C" DLL_EXPORT bool ThreadSendMessage(void* p, int message, const char* system_name, const char* name, double index, double value) {
 	bool successful = false;
 
 	thread_userdata* userdata = (thread_userdata*)p;
@@ -228,7 +236,7 @@ int thread_recvmessages(lua_State* state) {
 	return 0;
 }
 
-extern "C" __declspec(dllexport) thread_msg ThreadRecvMessage(void* p) {
+extern "C" DLL_EXPORT thread_msg ThreadRecvMessage(void* p) {
 	thread_userdata* userdata = (thread_userdata*)p;
 	thread_msg tmsg;
 	//tmsg.message = NULL;
@@ -238,7 +246,7 @@ extern "C" __declspec(dllexport) thread_msg ThreadRecvMessage(void* p) {
 	return tmsg;
 }
 
-extern "C" __declspec(dllexport) int ThreadReadAvailable(void* p) {
+extern "C" DLL_EXPORT int ThreadReadAvailable(void* p) {
 	thread_userdata* userdata = (thread_userdata*)p;
 	return userdata->sim_to_thread.read_available();
 }
@@ -247,7 +255,7 @@ extern "C" __declspec(dllexport) int ThreadReadAvailable(void* p) {
 // RailNetwork sim thread API
 //------------------------------------------------------------------------------
 
-extern "C" __declspec(dllexport) bool RnThreadSendMessage(int ent_id, int id, const char* name, double value) {
+extern "C" DLL_EXPORT bool RnThreadSendMessage(int ent_id, int id, const char* name, double value) {
 	bool successful = true;
 
 	if (rn_userdata) {
@@ -352,7 +360,7 @@ void threadRailnetworkSimulation(rn_thread_userdata* userdata) {
 			lua_setglobal(L,"CurrentTime");
 			
 			lua_newtable(L);
-			for each (auto var in trains_pos)
+			for (auto& var : trains_pos)
 			{
 				lua_createtable(L, 0, 3);
 				float* pos = var.second->GetPVSInfo()->m_vCenter;
@@ -576,13 +584,18 @@ LUA_FUNCTION( API_InitializeTrain )
 
 	//Create thread for simulation
 	boost::thread thread(threadSimulation, userdata);
-	if (SimThreadAffinityMask) {
-		if (!SetThreadAffinityMask(thread.native_handle(), static_cast<DWORD_PTR>(SimThreadAffinityMask))) {
-			ConColorMsg(Color(255,0,0), "Turbostroi: SetSTAffinityMask failed on train thread! \n");
+		if (SimThreadAffinityMask) {
+#ifdef _WIN32
+			if (!SetThreadAffinityMask(thread.native_handle(), static_cast<DWORD_PTR>(SimThreadAffinityMask))) {
+				ConColorMsg(Color(255,0,0), "Turbostroi: SetSTAffinityMask failed! \n");
+			}
+#else
+			cpu_set_t cpuset;
+			CPU_ZERO(&cpuset);
+			for (int i = 0; i < 32; ++i) if ((SimThreadAffinityMask >> i) & 1) CPU_SET(i, &cpuset);
+			pthread_setaffinity_np(thread.native_handle(), sizeof(cpu_set_t), &cpuset);
+#endif
 		}
-	}
-	return 0;
-}
 
 LUA_FUNCTION( API_DeinitializeTrain ) 
 {
@@ -657,14 +670,19 @@ int API_InitializeRailnetwork(ILuaBase* LUA) {
 	rn_userdata = userdata;
 
 	//Create thread for simulation
-	boost::thread thread(threadRailnetworkSimulation, userdata);
-	if (SimThreadAffinityMask) {
-		if (!SetThreadAffinityMask(thread.native_handle(), static_cast<DWORD_PTR>(SimThreadAffinityMask))) {
-			ConColorMsg(Color(255, 0, 0), "Turbostroi: SetSTAffinityMask failed on rail network thread! \n");
+	boost::thread thread(threadSimulation, userdata);
+		if (SimThreadAffinityMask) {
+#ifdef _WIN32
+			if (!SetThreadAffinityMask(thread.native_handle(), static_cast<DWORD_PTR>(SimThreadAffinityMask))) {
+				ConColorMsg(Color(255,0,0), "Turbostroi: SetSTAffinityMask failed! \n");
+			}
+#else
+			cpu_set_t cpuset;
+			CPU_ZERO(&cpuset);
+			for (int i = 0; i < 32; ++i) if ((SimThreadAffinityMask >> i) & 1) CPU_SET(i, &cpuset);
+			pthread_setaffinity_np(thread.native_handle(), sizeof(cpu_set_t), &cpuset);
+#endif
 		}
-	}
-	return 0;
-}
 
 int API_DeinitializeRailnetwork(ILuaBase* LUA)
 {
@@ -847,13 +865,17 @@ LUA_FUNCTION( API_SetMTAffinityMask )
 {
 	LUA->CheckType(1, Type::Number);
 	int MTAffinityMask = (int)LUA->GetNumber(1);
+#ifdef _WIN32
 	ConColorMsg(Color(0, 255, 0), "Turbostroi: Main Thread Running on CPU%i \n", GetCurrentProcessorNumber());
 	if (!SetThreadAffinityMask(GetCurrentThread(), static_cast<DWORD_PTR>(MTAffinityMask))) {
 		ConColorMsg(Color(255, 0, 0), "Turbostroi: SetMTAffinityMask failed! \n");
 	}
-	else {
-		ConColorMsg(Color(0, 255, 0), "Turbostroi: Changed to CPU%i \n", GetCurrentProcessorNumber());
-	}
+#else
+	cpu_set_t cpuset;
+	CPU_ZERO(&cpuset);
+	for (int i = 0; i < 32; ++i) if ((MTAffinityMask >> i) & 1) CPU_SET(i, &cpuset);
+	pthread_setaffinity_np(pthread_self(), sizeof(cpu_set_t), &cpuset);
+#endif
 	return 0;
 }
 
