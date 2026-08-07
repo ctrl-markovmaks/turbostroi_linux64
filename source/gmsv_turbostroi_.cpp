@@ -1,8 +1,7 @@
 #ifdef _WIN32
-#define DLL_EXPORT DLL_EXPORT
+#define DLL_EXPORT __declspec(dllexport)
 #else
 #define DLL_EXPORT __attribute__((visibility("default")))
-#ifndef _WIN32
 #include <pthread.h>
 #include <sched.h>
 #endif
