@@ -38,9 +38,8 @@ jobs:
 
     - name: Build Project
       run: |
-        make -C projects/linux/gmake \
-          CPPFLAGS="-I$(pwd)/external/garrysmod_common/sourcesdk/public -I$(pwd)/external/garrysmod_common/include" \
-          CXXFLAGS="-w"
+        export CPLUS_INCLUDE_PATH="$(pwd)/external/garrysmod_common/sourcesdk/public:$(pwd)/external/garrysmod_common/include:$(pwd)/external/garrysmod_common/sourcesdk/public/tier0"
+        make -C projects/linux/gmake CXXFLAGS="-w"
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
