@@ -38,8 +38,9 @@ jobs:
 
     - name: Build Project
       run: |
-        GARRYSMOD_COMMON=$(pwd)/external/garrysmod_common \
-        make -C projects/linux/gmake CXXFLAGS="-Wno-deprecated-copy -Wno-error -I$(pwd)/external/garrysmod_common/sourcesdk/public -I$(pwd)/external/garrysmod_common/include"
+        make -C projects/linux/gmake \
+          CPPFLAGS="-I$(pwd)/external/garrysmod_common/sourcesdk/public -I$(pwd)/external/garrysmod_common/include" \
+          CXXFLAGS="-w"
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
