@@ -41,14 +41,12 @@ jobs:
 
       - name: Build Project
         run: |
-          find external/garrysmod_common -type f -name "*.lua" -exec sed -i 's/\/linux32/\/linux64/g' {} +
           PROJECT_GENERATOR_VERSION=3 ./premake5 gmake --gmcommon=external/garrysmod_common --arch=x86_64
           LUA=$(find . -name "libluajit.so" -exec dirname {} \; | head -n 1)
-          SDK=$(pwd)/external/garrysmod_common/sourcesdk-minimal/lib/public/linux64
-          MAKEFILE=$(find . -name "gmsv_turbostroi.make")
-          sed -i 's/linux32/linux64/g' "$MAKEFILE"
-          export LIBRARY_PATH="$LUA:$SDK"
-          make -C $(dirname "$MAKEFILE") config=release_x86_64 LDFLAGS="-L$LUA -L$SDK" CXXFLAGS="$CXXFLAGS -fpermissive"
+          SDK="$(pwd)/external/garrysmod_common/sourcesdk-minimal/lib/public/linux64"
+          MF=$(find . -name "gmsv_turbostroi.make" | head -n 1)
+          sed -i "s/-rdynamic/-L$LUA -L$SDK -rdynamic/g" "$MF"
+          make -C "$(dirname "$MF")" config=release_x86_64
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
