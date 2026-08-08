@@ -6,6 +6,8 @@ if not multiprocessorcompile then multiprocessorcompile = function() end end
 if not linktimeoptimization then linktimeoptimization = function() end end
 if not enablepch then enablepch = function() end end
 
+libdirs { "external/bin64" }
+
 newoption({
     trigger = "gmcommon",
     description = "Sets the path to the garrysmod_common",
