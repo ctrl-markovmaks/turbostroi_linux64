@@ -10,7 +10,7 @@ newoption({
 
 local gmcommon = assert(_OPTIONS.gmcommon or os.getenv("GARRYSMOD_COMMON"),
     "you didn't provide a path to your garrysmod_common")
-include(gmcommon .. "/generator.v2.lua")
+include(gmcommon .. "/generator.v3.lua")
 
 CreateWorkspace({
     name = workspace_name,
