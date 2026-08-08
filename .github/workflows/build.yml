@@ -48,7 +48,7 @@ jobs:
           MAKEFILE=$(find . -name "gmsv_turbostroi.make")
           sed -i 's/linux32/linux64/g' "$MAKEFILE"
           export LIBRARY_PATH="$LUA:$SDK"
-          make -C $(dirname "$MAKEFILE") config=release_x86_64 LDFLAGS="-L$LUA -L$SDK"
+          make -C $(dirname "$MAKEFILE") config=release_x86_64 LDFLAGS="-L$LUA -L$SDK" CXXFLAGS="$CXXFLAGS -fpermissive"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
