@@ -45,9 +45,8 @@ jobs:
           PROJECT_GENERATOR_VERSION=3 ./premake5 gmake --gmcommon=external/garrysmod_common --arch=x86_64
           LUA=$(find . -name "libluajit.so" -exec dirname {} \; | head -n 1)
           SDK=$(pwd)/external/garrysmod_common/sourcesdk-minimal/lib/public/linux64
-          find . -name "gmsv_turbostroi.make" -exec sed -i "s#LDFLAGS +=#LDFLAGS += -L$LUA -L$SDK#g" {} +
-          MAKE_DIR=$(dirname $(find . -name "gmsv_turbostroi.make" | head -n 1))
-          make -C "$MAKE_DIR" config=release_x86_64
+          sed -i "s#LIBS +=#LIBS += -L$LUA -L$SDK#g" $(find . -name "gmsv_turbostroi.make")
+          make -C $(dirname $(find . -name "gmsv_turbostroi.make")) config=release_x86_64
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
