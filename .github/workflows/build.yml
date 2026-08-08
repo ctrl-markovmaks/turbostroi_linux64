@@ -27,6 +27,11 @@ jobs:
         run: |
           wget https://github.com/premake/premake-core/releases/download/v5.0.0-beta2/premake-5.0.0-beta2-linux.tar.gz
           tar -xzf premake-5.0.0-beta2-linux.tar.gz
+          
+      - name: Patch garrysmod_common for Linux x86_64
+        run: |
+          sed -i 's/sizeof(long) == sizeof(float)/sizeof(int) == sizeof(float)/g' external/garrysmod_common/public/tier1/bitbuf.h
+          sed -i 's/sizeof(T) == sizeof(long)/sizeof(T) == sizeof(int)/g' external/garrysmod_common/public/tier0/threadtools.h
 
       - name: Generate and Build
         run: |
