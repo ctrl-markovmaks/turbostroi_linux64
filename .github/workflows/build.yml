@@ -38,21 +38,16 @@ jobs:
         run: |
           sed -i 's/sizeof(long) == sizeof(float)/sizeof(int) == sizeof(float)/g' external/garrysmod_common/sourcesdk-minimal/public/tier1/bitbuf.h
           sed -i 's/sizeof(T) == sizeof(long)/sizeof(T) == sizeof(int)/g' external/garrysmod_common/sourcesdk-minimal/public/tier0/threadtools.h
-      - name: Fix Linker
-        run: |
-         LUA=$(find . -name "libluajit.so" -exec dirname {} \; | head -n 1)
-         SDK=$(pwd)/external/garrysmod_common/sourcesdk-minimal/lib/public/linux64
-         sed -i "s#LDFLAGS +=#LDFLAGS += -L$LUA -L$SDK#g" projects/linux/gmake/gmsv_turbostroi.make
 
       - name: Build Project
         run: |
           export CXXFLAGS="-fpermissive -Wno-error=narrowing"
-          LUA=$(find . -name "libluajit.so" -exec dirname {} \; | head -n 1)
           PROJECT_GENERATOR_VERSION=3 ./premake5 gmake --gmcommon=external/garrysmod_common --arch=x86_64
           LUA=$(find . -name "libluajit.so" -exec dirname {} \; | head -n 1)
           SDK=$(pwd)/external/garrysmod_common/sourcesdk-minimal/lib/public/linux64
           find . -name "gmsv_turbostroi.make" -exec sed -i "s#LDFLAGS +=#LDFLAGS += -L$LUA -L$SDK#g" {} +
-          make -C projects/linux/gmake config=release_x86_64
+          MAKE_DIR=$(dirname $(find . -name "gmsv_turbostroi.make" | head -n 1))
+          make -C "$MAKE_DIR" config=release_x86_64
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
