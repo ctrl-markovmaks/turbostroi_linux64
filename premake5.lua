@@ -2,6 +2,8 @@ local workspace_name = "turbostroi"
 local workspace_add_debug = false
 local project_serverside = true
 
+if not multiprocessorcompile then multiprocessorcompile = function() end end
+
 newoption({
     trigger = "gmcommon",
     description = "Sets the path to the garrysmod_common",
