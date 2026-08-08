@@ -33,6 +33,11 @@ jobs:
           
       - name: Install Multilib
         run: sudo apt-get update && sudo apt-get install -y g++-multilib
+        
+      - name: Patch Source SDK for 64-bit Linux
+        run: |
+          sed -i 's/sizeof(long) == sizeof(float)/sizeof(int) == sizeof(float)/g' external/garrysmod_common/sourcesdk-minimal/public/tier1/bitbuf.h
+          sed -i 's/sizeof(T) == sizeof(long)/sizeof(T) == sizeof(int)/g' external/garrysmod_common/sourcesdk-minimal/public/tier0/threadtools.h
 
       - name: Build Project
         run: |
