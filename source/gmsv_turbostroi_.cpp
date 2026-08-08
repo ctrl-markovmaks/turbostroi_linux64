@@ -395,7 +395,7 @@ void threadRailnetworkSimulation(rn_thread_userdata* userdata) {
 //------------------------------------------------------------------------------
 // Metrostroi Lua API
 //------------------------------------------------------------------------------
-void load(GarrysMod::Lua::ILuaBase* LUA, lua_State* L, char* filename, char* path, char* variable = NULL, char* defpath = NULL, bool json = false) {
+void load(GarrysMod::Lua::ILuaBase* LUA, lua_State* L, const char* filename, const char* path, const char* variable = NULL, const char* defpath = NULL, bool json = false) {
 	//Load up "sv_turbostroi.lua" in the new JIT environment
 	const char* file_data = NULL;
 	auto cache_item = load_files_cache.find(filename);
@@ -629,9 +629,9 @@ int API_InitializeRailnetwork(ILuaBase* LUA) {
 	LUA->Pop(); //Curtime
 
 	if (globalvars) {
-		std::sprintf(path_track, "metrostroi_data/track_%s.txt", globalvars->mapname);
-		std::sprintf(path_signs, "metrostroi_data/signs_%s.txt", globalvars->mapname);
-		std::sprintf(path_sched, "metrostroi_data/sched_%s.txt", globalvars->mapname);
+		std::sprintf(path_track, "metrostroi_data/track_%s.txt", STRING(globalvars->mapname));
+		std::sprintf(path_signs, "metrostroi_data/signs_%s.txt", STRING(globalvars->mapname));
+		std::sprintf(path_sched, "metrostroi_data/sched_%s.txt", STRING(globalvars->mapname));
 	}
 	else {
 		LUA->GetField(-1, "game");
@@ -682,6 +682,7 @@ int API_InitializeRailnetwork(ILuaBase* LUA) {
 			pthread_setaffinity_np(thread.native_handle(), sizeof(cpu_set_t), &cpuset);
 #endif
 		}
+	return 0
 }
 
 int API_DeinitializeRailnetwork(ILuaBase* LUA)
@@ -903,7 +904,7 @@ static void Think_handler(bool finalTick) {
 	target_time = globalvars->curtime;
 	shared_message msg;
 	if (printMessages.pop(msg)) {
-		ConColorMsg(Color(255, 0, 255), msg.message);
+		ConColorMsg(Color(255, 0, 255), "%s", msg.message);
 	}
 }
 
