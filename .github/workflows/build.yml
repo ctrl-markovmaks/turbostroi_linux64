@@ -15,7 +15,7 @@ jobs:
           mkdir -p external/luajit/linux64
           git clone https://github.com/LuaJIT/LuaJIT.git temp_luajit
           cd temp_luajit && make -j$(nproc)
-          cp src/libluajit.a ../external/luajit/linux64/
+          cp src/libluajit.a ../external/luajit/linux64/liblua51.a
 
       - name: Install Premake
         run: |
