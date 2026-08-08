@@ -34,8 +34,11 @@ jobs:
       - name: Install Multilib
         run: sudo apt-get update && sudo apt-get install -y g++-multilib
 
+      - name: List available configs
+        run: make -C projects/linux/gmake help
+
       - name: Build Project
         run: |
           PROJECT_GENERATOR_VERSION=3 ./premake5 gmake --gmcommon=external/garrysmod_common --arch=x86_64
-          make -C projects/linux/gmake config=release_linux64
+          make -C projects/linux/gmake config=release_x64
 
