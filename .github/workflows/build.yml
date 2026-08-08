@@ -44,5 +44,5 @@ jobs:
         with:
           name: gmsv_turbostroi_linux64
           path: |
-            projects/linux/gmake/**/Release/*.dll
-            projects/linux/gmake/**/Release/*.so
+            bin/**/*.so
+            **/*.so
