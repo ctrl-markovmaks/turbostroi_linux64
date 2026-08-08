@@ -45,10 +45,10 @@ jobs:
           PROJECT_GENERATOR_VERSION=3 ./premake5 gmake --gmcommon=external/garrysmod_common --arch=x86_64
           LUA_DIR=$(find . -name "libluajit.so" -exec dirname {} \; | head -n 1)
           SDK_DIR="$(pwd)/external/garrysmod_common/sourcesdk-minimal/lib/public/linux64"
-          # Принудительно добавляем пути поиска линковщика во все make-файлы
-          find . -name "*.make" -exec sed -i "s#LDFLAGS +=#LDFLAGS += -L$LUA_DIR -L$SDK_DIR#g" {} +
-          MF_DIR=$(dirname $(find . -name "gmsv_turbostroi.make" | head -n 1))
-          make -C "$MF_DIR" config=release_x86_64 CXXFLAGS="$CXXFLAGS -fpermissive"
+          MF=$(find . -name "gmsv_turbostroi.make" | head -n 1)
+          sed -i 's/LDFLAGS[[:space:]]*+=/& -L'"$LUA_DIR"' -L'"$SDK_DIR"'/' "$MF"
+          sed -i 's/linux32/linux64/g' "$MF"
+          make -C "$(dirname "$MF")" config=release_x86_64 CXXFLAGS="$CXXFLAGS -fpermissive"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
