@@ -48,14 +48,11 @@ jobs:
         run: |
           export CXXFLAGS="-fpermissive -Wno-error=narrowing"
           LUA=$(find . -name "libluajit.so" -exec dirname {} \; | head -n 1)
+          PROJECT_GENERATOR_VERSION=3 ./premake5 gmake --gmcommon=external/garrysmod_common --arch=x86_64
+          LUA=$(find . -name "libluajit.so" -exec dirname {} \; | head -n 1)
           SDK=$(pwd)/external/garrysmod_common/sourcesdk-minimal/lib/public/linux64
-        
-          # Находим makefile динамически
-          MAKEFILE_PATH=$(find . -name "gmsv_turbostroi.make" | head -n 1)
-          echo "Found makefile at: $MAKEFILE_PATH"
-        
-          sed -i "s#LDFLAGS +=#LDFLAGS += -L$LUA -L$SDK#g" "$MAKEFILE_PATH"
-          make -C projects/linux/gmake config=release_x86_64 LDFLAGS="-L$LUADIR"
+          find . -name "gmsv_turbostroi.make" -exec sed -i "s#LDFLAGS +=#LDFLAGS += -L$LUA -L$SDK#g" {} +
+          make -C projects/linux/gmake config=release_x86_64
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
