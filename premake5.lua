@@ -30,7 +30,7 @@ files {
 }
 
 includedirs {
-    "external/garrysmod_common/sourcesdk-minimal/public"
+    gmcommon .. "/sourcesdk-minimal/public"
 }
 
 filter("system:windows")
