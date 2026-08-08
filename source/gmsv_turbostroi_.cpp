@@ -682,7 +682,7 @@ int API_InitializeRailnetwork(ILuaBase* LUA) {
 			pthread_setaffinity_np(thread.native_handle(), sizeof(cpu_set_t), &cpuset);
 #endif
 		}
-	return 0
+	return 0;
 }
 
 int API_DeinitializeRailnetwork(ILuaBase* LUA)
