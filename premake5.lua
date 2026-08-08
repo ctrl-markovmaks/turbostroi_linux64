@@ -3,6 +3,7 @@ local workspace_add_debug = false
 local project_serverside = true
 
 if not multiprocessorcompile then multiprocessorcompile = function() end end
+if not linktimeoptimization then linktimeoptimization = function() end end
 
 newoption({
     trigger = "gmcommon",
