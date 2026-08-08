@@ -20,6 +20,10 @@ CreateProject({
     serverside = project_serverside,
 })
 
+includedirs {
+    gmcommon .. "/sourcesdk-minimal/public"
+}
+
 files {
     "external/metamod-source/core/sourcehook/sourcehook.cpp",
     "external/metamod-source/core/sourcehook/sourcehook_hookmangen.cpp",
@@ -27,10 +31,6 @@ files {
     "external/metamod-source/core/sourcehook/sourcehook_impl_chookmaninfo.cpp",
     "external/metamod-source/core/sourcehook/sourcehook_impl_cproto.cpp",
     "external/metamod-source/core/sourcehook/sourcehook_impl_cvfnptr.cpp" 
-}
-
-includedirs {
-    gmcommon .. "/sourcesdk-minimal/public"
 }
 
 filter("system:windows")
