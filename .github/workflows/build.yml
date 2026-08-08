@@ -36,6 +36,7 @@ jobs:
 
       - name: Build Project
         run: |
+          export CXXFLAGS="-fpermissive -Wno-error=narrowing"
           PROJECT_GENERATOR_VERSION=3 ./premake5 gmake --gmcommon=external/garrysmod_common --arch=x86_64
           make -C projects/linux/gmake config=release_x86_64
 
