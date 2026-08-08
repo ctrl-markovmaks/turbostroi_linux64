@@ -30,8 +30,8 @@ jobs:
           
       - name: Patch garrysmod_common for Linux x86_64
         run: |
-          sed -i 's/sizeof(long) == sizeof(float)/sizeof(int) == sizeof(float)/g' external/garrysmod_common/public/tier1/bitbuf.h
-          sed -i 's/sizeof(T) == sizeof(long)/sizeof(T) == sizeof(int)/g' external/garrysmod_common/public/tier0/threadtools.h
+          find external/garrysmod_common -name "bitbuf.h" -exec sed -i 's/sizeof(long) == sizeof(float)/sizeof(int) == sizeof(float)/g' {} +
+          find external/garrysmod_common -name "threadtools.h" -exec sed -i 's/sizeof(T) == sizeof(long)/sizeof(T) == sizeof(int)/g' {} +
 
       - name: Generate and Build
         run: |
