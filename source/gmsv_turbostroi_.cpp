@@ -26,7 +26,7 @@ using namespace GarrysMod::Lua;
 #include <GarrysMod/FactoryLoader.hpp>
 #include <GarrysMod/InterfacePointers.hpp>
 #include <eiface.h>
-#include <Color.h>
+#include <color.h>
 #include <tier0/dbg.h>
 #include <game/server/iplayerinfo.h>
 #include <iserver.h>
