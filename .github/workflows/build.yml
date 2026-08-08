@@ -50,7 +50,7 @@ jobs:
           LUA=$(find . -name "libluajit.so" -exec dirname {} \; | head -n 1)
           SDK=$(pwd)/external/garrysmod_common/sourcesdk-minimal/lib/public/linux64
         
-        # Находим makefile динамически
+          # Находим makefile динамически
           MAKEFILE_PATH=$(find . -name "gmsv_turbostroi.make" | head -n 1)
           echo "Found makefile at: $MAKEFILE_PATH"
         
