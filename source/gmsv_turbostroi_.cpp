@@ -592,8 +592,8 @@ LUA_FUNCTION( API_InitializeTrain )
 			CPU_ZERO(&cpuset);
 			for (int i = 0; i < 32; ++i) if ((SimThreadAffinityMask >> i) & 1) CPU_SET(i, &cpuset);
 			pthread_setaffinity_np(thread.native_handle(), sizeof(cpu_set_t), &cpuset);
-#endif
 		}
+#endif
     return 0;
 }
 
@@ -669,7 +669,7 @@ int API_InitializeRailnetwork(ILuaBase* LUA) {
 	rn_userdata = userdata;
 
 	//Create thread for simulation
-	boost::thread thread(threadSimulation, userdata);
+	boost::thread thread(threadRailnetworkSimulation, userdata);
 		if (SimThreadAffinityMask) {
 #ifdef _WIN32
 			if (!SetThreadAffinityMask(thread.native_handle(), static_cast<DWORD_PTR>(SimThreadAffinityMask))) {
@@ -682,6 +682,7 @@ int API_InitializeRailnetwork(ILuaBase* LUA) {
 			pthread_setaffinity_np(thread.native_handle(), sizeof(cpu_set_t), &cpuset);
 #endif
 		}
+}
 
 int API_DeinitializeRailnetwork(ILuaBase* LUA)
 {
