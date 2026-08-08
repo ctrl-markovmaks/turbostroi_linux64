@@ -64,8 +64,18 @@ filter({"system:linux", "architecture:x86"})
     links("lua51", "luajit")
 
 filter({"system:linux", "architecture:x86_64"})
-    libdirs("external/luajit/linux64")
-    links("lua51", "boost_thread", "boost_chrono", "boost_system")
+    libdirs { 
+        "external/luajit/linux64", 
+        "external/garrysmod_common/sourcesdk-minimal/lib/public/linux64" 
+    }
+    links {
+        "lua51", 
+        "tier0_srv", 
+        "vstdlib_srv", 
+        "boost_thread", 
+        "boost_chrono", 
+        "boost_system" 
+    }
 
 filter({})
 
