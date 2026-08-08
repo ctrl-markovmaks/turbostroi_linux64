@@ -4,6 +4,7 @@ local project_serverside = true
 
 if not multiprocessorcompile then multiprocessorcompile = function() end end
 if not linktimeoptimization then linktimeoptimization = function() end end
+if not enablepch then enablepch = function() end end
 
 newoption({
     trigger = "gmcommon",
