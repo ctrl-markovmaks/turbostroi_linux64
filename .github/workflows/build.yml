@@ -49,7 +49,7 @@ jobs:
           ln -sf "$SDK_DIR"/tier0_srv.so "$SDK_DIR/libtier0_srv.so" 2>/dev/null || true
           ln -sf "$SDK_DIR"/vstdlib_srv.so "$SDK_DIR/libvstdlib_srv.so" 2>/dev/null || true
           MF=$(find . -name "gmsv_turbostroi.make" | head -n 1)
-          sed -i 's#LDFLAGS[[:space:]]*+=#& -L'"$LUA_DIR"' -L$SDK_DIR#' "$MF"
+          sed -i "s#LDFLAGS[[:space:]]*+=#& -L$LUA_DIR -L$SDK_DIR#" "$MF"
           sed -i 's/linux32/linux64/g' "$MF"
           make -C "$(dirname "$MF")" config=release_x86_64 CXXFLAGS="$CXXFLAGS -fpermissive"
 
