@@ -55,13 +55,11 @@ jobs:
       - name: Setup x64 Binaries
         run: |
           mkdir -p external/bin64
-          find external/garrysmod_common -path "*/bin/linux64/tier0.so" -exec cp {} external/bin64/ \;
-          find external/garrysmod_common -path "*/bin/linux64/vstdlib.so" -exec cp {} external/bin64/ \;
+          find external/garrysmod_common -name "tier0.so" -exec cp {} external/bin64/ \; || true
+          find external/garrysmod_common -name "vstdlib.so" -exec cp {} external/bin64/ \; || true
           cd external/bin64
-          [ -f tier0.so ] || wget -q https://raw.githubusercontent.com/garrysmod-addons/garrysmod_common/master/bin/linux64/tier0.so
-          [ -f vstdlib.so ] || wget -q https://raw.githubusercontent.com/garrysmod-addons/garrysmod_common/master/bin/linux64/vstdlib.so
-          ln -sf tier0.so libtier0.so
-          ln -sf vstdlib.so libvstdlib.so
+          [ -f tier0.so ] && ln -sf tier0.so libtier0.so || true
+          [ -f vstdlib.so ] && ln -sf vstdlib.so libvstdlib.so || true
           
       - name: Generate and Build
         run: |
