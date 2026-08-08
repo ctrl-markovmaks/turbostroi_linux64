@@ -29,6 +29,10 @@ files {
     "external/metamod-source/core/sourcehook/sourcehook_impl_cvfnptr.cpp" 
 }
 
+includedirs {
+    "external/garrysmod_common/sourcesdk-minimal/public"
+}
+
 filter("system:windows")
     nuget { "boost-vc142:1.71.0", "boost:1.71.0", "boost_thread-vc142:1.71.0", "boost_date_time-vc142:1.71.0", "boost_chrono-vc142:1.71.0", "boost_atomic-vc142:1.71.0" }
 
