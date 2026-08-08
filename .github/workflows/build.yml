@@ -52,12 +52,16 @@ jobs:
               cp "$VSTDLIB" "$TARGET_DIR/libvstdlib.so"
           fi
           
-      - name: Setup lib paths
+      - name: Setup x64 Binaries
         run: |
           mkdir -p external/bin64
-          find external -name "*tier0*.so" -o -name "*vstdlib*.so" -exec cp {} external/bin64/ \;
+          find external/garrysmod_common -path "*/bin/linux64/tier0.so" -exec cp {} external/bin64/ \;
+          find external/garrysmod_common -path "*/bin/linux64/vstdlib.so" -exec cp {} external/bin64/ \;
           cd external/bin64
-          for f in *.so; do ln -sf "$f" "lib$f"; done
+          [ -f tier0.so ] || wget -q https://raw.githubusercontent.com/garrysmod-addons/garrysmod_common/master/bin/linux64/tier0.so
+          [ -f vstdlib.so ] || wget -q https://raw.githubusercontent.com/garrysmod-addons/garrysmod_common/master/bin/linux64/vstdlib.so
+          ln -sf tier0.so libtier0.so
+          ln -sf vstdlib.so libvstdlib.so
           
       - name: Generate and Build
         run: |
