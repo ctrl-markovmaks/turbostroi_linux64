@@ -20,6 +20,12 @@ CreateProject({
     serverside = project_serverside,
 })
 
+links {
+    "boost_thread",
+    "boost_chrono",
+    "boost_system"
+}
+
 includedirs {
     gmcommon .. "/sourcesdk-minimal/public"
 }
