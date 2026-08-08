@@ -38,6 +38,11 @@ jobs:
         run: |
           sed -i 's/sizeof(long) == sizeof(float)/sizeof(int) == sizeof(float)/g' external/garrysmod_common/sourcesdk-minimal/public/tier1/bitbuf.h
           sed -i 's/sizeof(T) == sizeof(long)/sizeof(T) == sizeof(int)/g' external/garrysmod_common/sourcesdk-minimal/public/tier0/threadtools.h
+      - name: Fix Linker
+        run: |
+         LUA=$(find . -name "libluajit.so" -exec dirname {} \; | head -n 1)
+         SDK=$(pwd)/external/garrysmod_common/sourcesdk-minimal/lib/public/linux64
+         sed -i "s#LDFLAGS +=#LDFLAGS += -L$LUA -L$SDK#g" projects/linux/gmake/gmsv_turbostroi.make
 
       - name: Build Project
         run: |
