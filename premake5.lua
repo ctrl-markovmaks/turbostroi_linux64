@@ -74,8 +74,8 @@ filter({"system:linux", "architecture:x86_64"})
     }
     links {
         "lua51", 
-        "tier0_srv", 
-        "vstdlib_srv", 
+        "tier0", 
+        "vstdlib", 
         "boost_thread", 
         "boost_chrono", 
         "boost_system" 
