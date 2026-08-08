@@ -595,7 +595,7 @@ LUA_FUNCTION( API_InitializeTrain )
 #endif
 
     return 0;
-}
+		}
 }
 
 LUA_FUNCTION( API_DeinitializeTrain ) {
