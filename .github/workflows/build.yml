@@ -41,9 +41,16 @@ jobs:
           
       - name: Fix tier0/vstdlib symlinks
         run: |
-          cd external/garrysmod_common/sourcesdk-minimal/lib/public/linux64
-          ln -sf tier0.so libtier0.so
-          ln -sf vstdlib.so libvstdlib.so
+          TARGET_DIR="external/garrysmod_common/sourcesdk-minimal/lib/public/linux64"
+          mkdir -p "$TARGET_DIR"
+          TIER0=$(find external/garrysmod_common -name "tier0.so" -o -name "tier0_srv.so" | head -n 1)
+          VSTDLIB=$(find external/garrysmod_common -name "vstdlib.so" -o -name "vstdlib_srv.so" | head -n 1)
+          if [ -n "$TIER0" ]; then
+              cp "$TIER0" "$TARGET_DIR/libtier0.so"
+          fi
+          if [ -n "$VSTDLIB" ]; then
+              cp "$VSTDLIB" "$TARGET_DIR/libvstdlib.so"
+          fi
 
       - name: Generate and Build
         run: |
