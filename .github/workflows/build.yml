@@ -30,7 +30,6 @@ jobs:
 
       - name: Generate and Build
         run: |
-          git checkout .
           PROJECT_GENERATOR_VERSION=3 ./premake5 gmake --gmcommon=external/garrysmod_common --arch=x86_64
           MF=$(find . -name "gmsv_turbostroi.make" | head -n 1)
           sed -i 's/linux32/linux64/g' "$MF"
