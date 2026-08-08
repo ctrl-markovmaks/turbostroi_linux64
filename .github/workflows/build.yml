@@ -41,15 +41,13 @@ jobs:
        
       - name: Build Project
         run: |
-          echo "LUA: $LUA_SO" && echo "SDK: $SDK"
-          find external/garrysmod_common -type f -name "*.lua" -exec sed -i 's/\/linux32/\/linux64/g' {} +
+          mkdir -p libs
+          find . -name "*luajit*.so*" -exec cp -u {} libs/libluajit.so \;
+          find . -name "*tier0*.so*" -exec cp -u {} libs/libtier0_srv.so \;
+          find . -name "*vstdlib*.so*" -exec cp -u {} libs/vstdlib_srv.so \;
           PROJECT_GENERATOR_VERSION=3 ./premake5 gmake --gmcommon=external/garrysmod_common --arch=x86_64
-          LUA_SO=$(find . -name "*luajit*.so*" | head -n 1)
-          SDK="$(pwd)/external/garrysmod_common/sourcesdk-minimal/lib/public/linux64"
           MF=$(find . -name "gmsv_turbostroi.make" | head -n 1)
-          sed -i "s#-lluajit#$LUA_SO#g" "$MF"
-          sed -i "s#-ltier0_srv#$SDK/tier0_srv.so#g" "$MF"
-          sed -i "s#-lvstdlib_srv#$SDK/vstdlib_srv.so#g" "$MF"
+          sed -i "s#-l[[:alnum:]]*#$(pwd)/libs/libluajit.so#g" "$MF"
           sed -i 's/linux32/linux64/g' "$MF"
           make -C "$(dirname "$MF")" config=release_x86_64 CXXFLAGS="$CXXFLAGS -fpermissive"
 
