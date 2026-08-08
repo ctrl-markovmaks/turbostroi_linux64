@@ -30,7 +30,7 @@ jobs:
 
       - name: Generate and Build
         run: |
-          PROJECT_GENERATOR_VERSION=3 ./premake5 gmake --gmcommon=external/garrysmod_common --arch=x86_64
+          PROJECT_GENERATOR_VERSION=3 ./premake5 gmake --gmcommon=external/garrysmod_common
           MF=$(find . -name "gmsv_turbostroi.make" | head -n 1)
           sed -i 's/linux32/linux64/g' "$MF"
           make -C "$(dirname "$MF")" config=release_x86_64 CXXFLAGS="$CXXFLAGS -fpermissive"
