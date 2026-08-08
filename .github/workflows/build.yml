@@ -39,3 +39,10 @@ jobs:
           PROJECT_GENERATOR_VERSION=3 ./premake5 gmake --gmcommon=external/garrysmod_common --arch=x86_64
           make -C projects/linux/gmake help
 
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gmsv_turbostroi_linux64
+          path: |
+            projects/linux/gmake/**/Release/*.dll
+            projects/linux/gmake/**/Release/*.so
