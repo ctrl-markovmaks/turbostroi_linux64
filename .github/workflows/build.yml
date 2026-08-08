@@ -51,7 +51,14 @@ jobs:
           if [ -n "$VSTDLIB" ]; then
               cp "$VSTDLIB" "$TARGET_DIR/libvstdlib.so"
           fi
-
+          
+      - name: Setup lib paths
+        run: |
+          mkdir -p external/bin64
+          find external -name "*tier0*.so" -o -name "*vstdlib*.so" -exec cp {} external/bin64/ \;
+          cd external/bin64
+          for f in *.so; do ln -sf "$f" "lib$f"; done
+          
       - name: Generate and Build
         run: |
           PROJECT_GENERATOR_VERSION=3 ./premake5 gmake --gmcommon=external/garrysmod_common
