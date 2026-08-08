@@ -47,9 +47,8 @@ jobs:
           LUA=$(find . -name "libluajit.so" -exec dirname {} \; | head -n 1)
           SDK=$(pwd)/external/garrysmod_common/sourcesdk-minimal/lib/public/linux64
           MAKEFILE=$(find . -name "gmsv_turbostroi.make")
-          sed -i "s#LDFLAGS +=#LDFLAGS += -L$LUA -L$SDK#g" "$MAKEFILE"
           sed -i 's/linux32/linux64/g' "$MAKEFILE"
-          make -C $(dirname $(find . -name "gmsv_turbostroi.make")) config=release_x86_64
+          make -C $(dirname "$MAKEFILE") config=release_x86_64 LDFLAGS="-L$LUA -L$SDK"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
