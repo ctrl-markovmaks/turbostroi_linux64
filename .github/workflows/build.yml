@@ -33,6 +33,17 @@ jobs:
           find external/garrysmod_common -name "bitbuf.h" -exec sed -i 's/sizeof(long) == sizeof(float)/sizeof(int) == sizeof(float)/g' {} +
           find external/garrysmod_common -name "threadtools.h" -exec sed -i 's/sizeof(T) == sizeof(long)/sizeof(T) == sizeof(int)/g' {} +
 
+      - name: Fix processor_detect_linux for x86_64
+        run: |
+          find external/garrysmod_common -name "processor_detect_linux.cpp" -exec tee {} > /dev/null << 'EOF'
+          #include "tier0/platform.h"
+          bool CheckMMX() { return true; }
+          bool CheckSSE() { return true; }
+          bool CheckSSE2() { return true; }
+          bool Check3DNow() { return false; }
+          bool CheckCMOV() { return true; }
+          EOF
+
       - name: Generate and Build
         run: |
           PROJECT_GENERATOR_VERSION=3 ./premake5 gmake --gmcommon=external/garrysmod_common
