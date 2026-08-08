@@ -65,7 +65,7 @@ filter({"system:linux", "architecture:x86"})
 
 filter({"system:linux", "architecture:x86_64"})
     libdirs("external/luajit/linux64")
-    links("luajit", "boost_thread", "boost_chrono", "boost_system")
+    links("lua51", "boost_thread", "boost_chrono", "boost_system")
 
 filter({})
 
