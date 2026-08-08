@@ -38,6 +38,12 @@ jobs:
           for f in $(find external/garrysmod_common -name "processor_detect_linux.cpp"); do
             echo -e '#include "tier0/platform.h"\nbool CheckMMX() { return true; }\nbool CheckSSE() { return true; }\nbool CheckSSE2() { return true; }\nbool Check3DNow() { return false; }\nbool CheckCMOV() { return true; }' > "$f"
           done
+          
+      - name: Fix tier0/vstdlib symlinks
+        run: |
+          cd external/garrysmod_common/sourcesdk-minimal/lib/public/linux64
+          ln -sf tier0.so libtier0.so
+          ln -sf vstdlib.so libvstdlib.so
 
       - name: Generate and Build
         run: |
