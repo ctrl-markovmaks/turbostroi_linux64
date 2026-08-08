@@ -593,10 +593,9 @@ LUA_FUNCTION( API_InitializeTrain )
 			for (int i = 0; i < 32; ++i) if ((SimThreadAffinityMask >> i) & 1) CPU_SET(i, &cpuset);
 			pthread_setaffinity_np(thread.native_handle(), sizeof(cpu_set_t), &cpuset);
 #endif
-		}
+}
 
-LUA_FUNCTION( API_DeinitializeTrain ) 
-{
+LUA_FUNCTION( API_DeinitializeTrain ) {
 	//RailNetwork
 	CBaseHandle* EntHandle;
 	//Get entity index
