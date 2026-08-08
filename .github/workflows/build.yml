@@ -35,14 +35,9 @@ jobs:
 
       - name: Fix processor_detect_linux for x86_64
         run: |
-          find external/garrysmod_common -name "processor_detect_linux.cpp" -exec tee {} > /dev/null << 'EOF'
-          #include "tier0/platform.h"
-          bool CheckMMX() { return true; }
-          bool CheckSSE() { return true; }
-          bool CheckSSE2() { return true; }
-          bool Check3DNow() { return false; }
-          bool CheckCMOV() { return true; }
-          EOF
+          for f in $(find external/garrysmod_common -name "processor_detect_linux.cpp"); do
+            echo -e '#include "tier0/platform.h"\nbool CheckMMX() { return true; }\nbool CheckSSE() { return true; }\nbool CheckSSE2() { return true; }\nbool Check3DNow() { return false; }\nbool CheckCMOV() { return true; }' > "$f"
+          done
 
       - name: Generate and Build
         run: |
