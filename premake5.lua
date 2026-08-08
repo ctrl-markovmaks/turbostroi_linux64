@@ -41,8 +41,8 @@ filter({})
 removefiles { "source/guicon.cpp", "source/guicon.h" }
 includedirs { "external/gmod-module-base/include", "external/luajit", "external/metamod-source/core/sourcehook" }
 
-removeincludedirs { "external/garrysmod_common-x86-64/include", "external/garrysmod_common-x86-64/helpers/include" }
-includedirs { "external/garrysmod_common-x86-64/include", "external/garrysmod_common-x86-64/helpers/include" }
+removeincludedirs { gmcommon .. "/include", gmcommon .. "/helpers/include" }
+includedirs { gmcommon .. "/include", gmcommon .. "/helpers/include" }
 
 filter({"system:windows", "architecture:x86"})
     libdirs("external/luajit/x86")
